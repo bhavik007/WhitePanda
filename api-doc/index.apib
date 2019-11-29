@@ -1,0 +1,251 @@
+FORMAT: 1A
+HOST: http://localhost:3000/api/v1
+
+# White Panda (Practical Test)
+
+### Version: v1
+This API documentation is given details about the all Nodejs Structure API list.
+It is basically a reference documents which describes:
+
+  - A Software’s code
+  - The parameters a programmer sends (or the request sent) to the server.
+  - What the server does
+  - Response from the server
+
+API documentation includes information about the code. It gives details about the APIs (also called methods and functions)
+that developers use to connect or interface with the server.
+
+# Group User
+<!--------------------------------------- USER API START --------------------------------------->
+This section groups User specific API
+
+### SIGNUP  [POST /user/user-signup]
+Signup in epicPic app.
+
++ Request (application/json)
+  + Headers
+
+            api-key: 1,
+            udid: "8817480565574762",
+            device-type: "Chrome"
+
+  + Body
+
+            {
+                "first_name": "Nishil",
+                "last_name": "Nathwani",
+                "email": "nishil12@gmail.com",
+                "mobile": "7698993133",
+                "password": "7698993134",
+                "gender": "MALE"
+            }
+
++ Response 200 (application/json)
+
+  + Body
+
+            {
+                "status": true,
+                "data": {
+                    "code": 17003,
+                    "message": "One Time Password (OTP) has been sent to your mobile ******3133, please enter the same here to verify.",
+                    "otp": "59680"
+                }
+            }
+
+            {
+              "status": false,
+              "error": {
+                "code": 2005,
+                "message": "Invalid SignUp Request"
+              }
+            }
+
+            {
+              "status": false,
+              "error": {
+                  "code": 17001,
+                  "message": 'User is Already Exist.'
+                }
+            }
+
+### verify otp  [PUT /user/verify-otp]
+verify otp.
+
++ Request (application/json)
+  + Headers
+
+            api-key: 1,
+            udid: "8817480565574762",
+            device-type: "Chrome"
+
+  + Body
+
+            {
+                "mobile": "7698993133",
+                "otp": "12312"
+            }
+
++ Response 200 (application/json)
+
+  + Body
+
+              {
+                  "status": false,
+                  "error": {
+                      "code": 17007,
+                      "message": "One Time Password (OTP) was expired."
+                  }
+              }
+
+              {
+                "status": false,
+                "er ror": {
+                  "code": 2007,
+                  "message": "Invalid verify otp request"
+                }
+              }
+
+              {
+                "status": false,
+                "error": {
+                  "code": 17005,
+                  "message": "Invalid one time password (OTP) entered."
+                }
+              }
+
+              {
+                "status": false,
+                "error": {
+                  "code": 17028,
+                  "message": "Otp verified successfully."
+                }
+              }
+
+              {
+                  "status": true,
+                  "data": {
+                      "user_id": 1,
+                      "name": "Nishil Nathwani",
+                      "mobile": "+91 7698993133",
+                      "email": "nishil12@gmail.com",
+                      "access_token": "7a06f970-4e6d-11e9-9ff4-ad57600796e4"
+                  }
+              }
+
+### User sign in  [POST /user/user-signin]
+User sign in.
+
++ Request (application/json)
+  + Headers
+
+            api-key: 1,
+            udid: "8817480565574762",
+            device-type: "Chrome"
+
+  + Body
+
+            {
+              "email": "nishil12@gmail.com",
+              "password": "7698993134"
+            }
+
++ Response 200 (application/json)
+
+  + Body
+
+            {
+                "status": true,
+                "data": {
+                    "access_token": "1b196910-4e6e-11e9-8bba-f3bbb619e103"
+                }
+            }
+
+### Forgot password  [PUT /user/forgot-password]
+Forgot password.
+
++ Request (application/json)
+  + Headers
+
+            api-key: 1,
+            udid: "8817480565574762",
+            device-type: "Chrome"
+
+  + Body
+
+            {
+              "mobile": "7698993133"
+            }
+
++ Response 200 (application/json)
+
+  + Body
+
+            {
+                "status": true,
+                "data": {
+                    "code": 2006,
+                    "message": "Otp sent successfully.",
+                    "otp": "64692"
+                }
+            }
+
+### Update Password  [PUT /user/update-password]
+Update Password.
+
++ Request (application/json)
+  + Headers
+
+            api-key: 1,
+            udid: "8817480565574762",
+            device-type: "Chrome",
+            Authorization: "a4fbdf50-4e6e-11e9-8bba-f3bbb619e103"
+
+  + Body
+
+            {
+              "password": "7698993133"
+            }
+
++ Response 200 (application/json)
+
+  + Body
+
+            {
+                "status": false,
+                "error": {
+                    "code": 2015,
+                    "message": "Password changed successfully."
+                }
+            }
+
+### Sign in with OTP  [POST /user/user-signin-with-otp]
+Sign in with OTP.
+
++ Request (application/json)
+  + Headers
+
+            api-key: 1,
+            udid: "8817480565574762",
+            device-type: "Chrome",
+            Authorization: "a4fbdf50-4e6e-11e9-8bba-f3bbb619e103"
+
+  + Body
+
+            {
+             "mobile": "7698993133" 
+            }
+
++ Response 200 (application/json)
+
+  + Body
+
+            {
+              "status": true,
+              "data": {
+                  "code": 2006,
+                  "message": "Otp sent successfully.",
+                  "otp": "56783"
+              }
+            }
+                        
