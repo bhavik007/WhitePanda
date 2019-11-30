@@ -14,19 +14,19 @@ var applicationConfiguration = {
 
 var requestMessages = {
   'ERR_API_KEY_NOT_FOUND': {
-    code: 2001,
+    code: 1001,
     message: 'api-key not found'
   },
   'ERR_INVALID_API_KEY': {
-    code: 2002,
+    code: 1002,
     message: 'Invalid api-key'
   },
   'ERR_UDID_NOT_FOUND': {
-    code: 2003,
+    code: 1003,
     message: 'UDID not found'
   },
   'ERR_DEVICE_TYPE_NOT_FOUND': {
-    code: 2004,
+    code: 1004,
     message: 'device-type not found'
   }
 };
@@ -55,10 +55,6 @@ let userMessage = {
   ERR_OTP_IS_EXPIRED: {
     code: 2006,
     message: 'Otp is expired.'
-  },
-  MSG_OTP_SENT_SUCCEFULLY: {
-    code: 2006,
-    message: 'Otp sent successfully.'
   },
   ERR_INVALID_VERIFY_OTP_REQUEST: {
     code: 2007,
@@ -97,17 +93,21 @@ let userMessage = {
     message: 'Password changed successfully.'
   },
   ERR_PASSWORD_CHANGE: {
-    code: 2015,
+    code: 2016,
     message: 'Error while change password.'
   },
   ERR_WHILE_SIGN_IN_WITH_OTP: {
-    code: 2016,
+    code: 2017,
     message: 'Error while sign in with OTP.'
-  }
+  },
+  MSG_OTP_SENT_SUCCEFULLY: {
+    code: 2018,
+    message: 'Otp sent successfully.'
+  },
 };
 
 module.exports = {
   appConfig: applicationConfiguration,
   userMessage: userMessage,
   requestMessages: requestMessages
-  }
+}

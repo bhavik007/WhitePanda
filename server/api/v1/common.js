@@ -1,17 +1,12 @@
-var debug = require('debug')('server:api:v1:common');
-var constant = require('./constant');
-var queryExecutor = require('../../helper/mySql');
-var dbDateFormat = constant.appConfig.DB_DATE_FORMAT;
-var pageSize = constant.appConfig.PAGE_SIZE;
-var d3 = require("d3");
-let url = require('url');
-let querystring = require('querystring');
+const debug = require('debug')('server:api:v1:common');
+const constant = require('./constant');
+const queryExecutor = require('../../helper/mySql');
 
-module.exports.cloneObject = function (obejct) {
+cloneObject = (obejct) => {
   return JSON.parse(JSON.stringify(obejct));
 };
 
-module.exports.executeQuery = async function (jsonQuery, cb) {
+executeQuery = async (jsonQuery, cb) => {
 
   if (cb) {
     await queryExecutor.executeQuery(jsonQuery, cb);
@@ -20,7 +15,7 @@ module.exports.executeQuery = async function (jsonQuery, cb) {
   }
 };
 
-module.exports.sendResponse = function (response, obj, isSuccess) {
+sendResponse = (response, obj, isSuccess) => {
   if (isSuccess != undefined) {
     if (isSuccess == true) {
       response.send({
@@ -38,8 +33,8 @@ module.exports.sendResponse = function (response, obj, isSuccess) {
   }
 }
 
-module.exports.validateObject = function (arrParam) {
-  arrParam.forEach(function (param) {
+validateObject = (arrParam) => {
+  arrParam.forEach((param) => {
     if (param == undefined && typeof param != "object") {
       return false;
     }
@@ -47,10 +42,10 @@ module.exports.validateObject = function (arrParam) {
   return true;
 }
 
-module.exports.validateParams = function (arrParam) {
+validateParams = (arrParam) => {
   let totalParams = arrParam.length;
   let index = 0;
-  arrParam.forEach(function (param) {
+  arrParam.forEach((param) => {
     if (param != undefined && param != "") {
       index++;
     }
@@ -62,10 +57,10 @@ module.exports.validateParams = function (arrParam) {
   }
 }
 
-module.exports.prepareFieldValue = (userinfo) => {
+prepareFieldValue = (userinfo) => {
   let userKeys = Object.keys(userinfo);
   let userfieldValueInsert = [];
-  userKeys.forEach(function (userKeys) {
+  userKeys.forEach((userKeys) => {
     if (userinfo[userKeys] !== undefined) {
       let fieldValueObj = {};
       fieldValueObj = {
@@ -78,10 +73,20 @@ module.exports.prepareFieldValue = (userinfo) => {
   return userfieldValueInsert;
 }
 
-module.exports.executeRawQuery = async function (jsonQuery, cb) {
+executeRawQuery = async (jsonQuery, cb) => {
   if (cb) {
     await queryExecutor.executeRawQuery(jsonQuery, cb);
   } else {
     return await queryExecutor.executeRawQuery(jsonQuery);
   }
 };
+
+module.exports = {
+  cloneObject: cloneObject,
+  executeRawQuery: executeRawQuery,
+  prepareFieldValue: prepareFieldValue,
+  validateParams: validateParams,
+  validateObject: validateObject,
+  sendResponse: sendResponse,
+  executeQuery: executeQuery
+}

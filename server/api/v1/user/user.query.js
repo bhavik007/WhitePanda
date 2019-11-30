@@ -2,7 +2,7 @@ const tbl_UserMaster = "tbl_UserMaster";
 const tbl_OTP = "tbl_OtpMaster";
 const tbl_AccessToken = "tbl_AccessToken";
 
-let query = {
+const query = {
     checkUserIsExistQuery: {
         table: tbl_UserMaster,
         select: [{
