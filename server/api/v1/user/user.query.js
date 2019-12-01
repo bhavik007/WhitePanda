@@ -201,7 +201,7 @@ const query = {
     exprieAccessTokenQuery: {
         table: tbl_AccessToken,
         update: [{
-            field: 'fk_userID',
+            field: 'isActive',
             fValue: 0
         }],
         filter: {
@@ -223,6 +223,18 @@ const query = {
             fValue: []
         }
     },
+    expireAccessTokenByAccessTokenQuery: {
+        table: tbl_AccessToken,
+        update: [{
+            field: 'isActive',
+            fValue: 0
+        }],
+        filter: {
+            field: 'accessToken',
+            operator: 'EQ',
+            value: ''
+        }
+    }
 }
 
 module.exports = query;

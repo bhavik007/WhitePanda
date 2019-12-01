@@ -23,7 +23,7 @@ let signupService = async function (request, response) {
     debug("user.service -> signupService");
     try {
         let isValidObject = common.validateObject([request.body]);
-        let isValid = common.validateParams([request.body.first_name, request.body.last_name, request.body.email, request.body.mobile, request.body.password, request.body.gender]);
+        let isValid = common.validateParams([request.body.first_name, request.body.last_name, request.body.email, request.body.mobile, request.body.password]);
         if (!isValidObject) {
             return await common.sendResponse(response, constant.userMessage.ERR_INVALID_SIGNUP_REQUEST, false);
         } else if (!isValid) {
@@ -36,7 +36,7 @@ let signupService = async function (request, response) {
         userinfo.email = request.body.email;
         userinfo.countryCode = request.body.country_code !== undefined ? request.body.country_code : "+91";
         userinfo.mobile = request.body.mobile;
-        userinfo.gender = request.body.gender;
+        // userinfo.gender = request.body.gender;
         userinfo.password = md5(request.body.password);
 
         let userExist = await userDAL.checkUserIsExist(userinfo.countryCode, userinfo.mobile, userinfo.email);
@@ -149,27 +149,29 @@ let signinService = async (request, response) => {
         } else if (!isValid) {
             return await common.sendResponse(response, constant.userMessage.ERR_INVALID_SIGNUP_REQUEST, false);
         }
-        // let countryCode = request.body.country_code !== undefined ? request.body.country_code : "+91";
+        let countryCode = "+91";
         let userName = request.body.user_name;
         let password = md5(request.body.password);
-        let checkUserEmailPassword = await userDAL.checkUserEmailAndPassword("+91", userName, password);
+        let checkUserEmailPassword = await userDAL.checkUserEmailAndPassword(countryCode, userName, password);
         if (checkUserEmailPassword.status === true && checkUserEmailPassword.content.length > 0) {
             if ((checkUserEmailPassword.content[0].email == userName || checkUserEmailPassword.content[0].mobile == userName) && checkUserEmailPassword.content[0].password == password && checkUserEmailPassword.content[0].is_active == 1) {
-                let result = await createAccessToken(request, checkUserEmailPassword.content[0].user_id)
-                return await common.sendResponse(response, result.data, true);
+                let userInfo = await userDAL.getUserInfo(countryCode, checkUserEmailPassword.content[0].mobile, -1);
+                let result = await createAccessToken(request, checkUserEmailPassword.content[0].user_id);
+                userInfo.content[0].access_token = result.data.access_token;
+                return await common.sendResponse(response, userInfo.content[0], true);
             } else if (checkUserEmailPassword.content[0].email == email && checkUserEmailPassword.content[0].password == password && checkUserEmailPassword.content[0].is_active == 0) {
                 return await common.sendResponse(response, constant.userMessage.ERR_USER_IS_BLOCKED, false);
             } else {
                 return await common.sendResponse(response, constant.userMessage.USER_DOSE_NOT_EXIST, false);
             }
         } else if (checkUserEmailPassword.status === true && checkUserEmailPassword.content.length === 0) {
-            return await common.sendResponse(response, constant.userMessage.USER_, false);
+            return await common.sendResponse(response, constant.userMessage.USER_DOSE_NOT_EXIST, false);
         } else {
-
+            return await common.sendResponse(response, constant.userMessage.ERR_WHILE_SIGN_IN, false);
         }
     } catch (ex) {
         debug(ex);
-        return await common.sendResponse(respons, constant.userMessage.ERR_WHILE_SIGN_IN, false);
+        return await common.sendResponse(response, constant.userMessage.ERR_WHILE_SIGN_IN, false);
     }
 }
 
@@ -307,6 +309,22 @@ let signinWithOtpService = async (request, response) => {
     }
 }
 
+let signOutService = async (request, response) => {
+    debug("user.service -> signOutService");
+    try {
+        let accessToken = request.body.access_token;
+        let expireAccessToken = userDAL.expireAccessTokenByAccessToken(accessToken);
+        if (expireAccessToken.status === false) {
+            return await common.sendResponse(response, constant.userMessage.ERR_WHILE_SIGN_OUT, false);
+        } else {
+            return common.sendResponse(response, constant.userMessage.SIGN_OUT_SUCCESSFUL, true);
+        }
+    } catch (ex) {
+        debug(ex);
+        return common.sendResponse(response, constant.userMessage.ERR_WHILE_SIGN_OUT, false);
+    }
+}
+
 module.exports = {
     signup: signupService,
     verifyOtp: verifyOTPService,
@@ -314,4 +332,5 @@ module.exports = {
     forgotPassword: forgotPasswordService,
     updatePassword: updatePasswordService,
     signinWithOtp: signinWithOtpService,
+    signOut: signOutService
 }

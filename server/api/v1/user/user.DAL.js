@@ -116,8 +116,15 @@ let exprieAccessToken = async (userId, deviceId) => {
 let createAccessToken = async (userId, deviceType, deviceId, token, expiryDateTime) => {
     debug("user.DAL -> createAccessToken");
     let createAccessTokenQuery = common.cloneObject(query.createAccessTokenQuery);
-    createAccessTokenQuery.insert.fValue = [userId, deviceType, deviceId, token, expiryDateTime, 1];
+    createAccessTokenQuery.insert.fValue = [userId, deviceType, deviceId, token, d3.timeFormat(dbDateFormat)(expiryDateTime), 1];
     return common.executeQuery(createAccessTokenQuery);
+}
+
+let expireAccessTokenByAccessToken = async (accessToken) => {
+    debug("user.DAL -> expireAccessTokenByAccessToken");
+    let expireAccessTokenByAccessTokenQuery = common.cloneObject(query.expireAccessTokenByAccessTokenQuery);
+    expireAccessTokenByAccessTokenQuery.filter.value = accessToken;
+    return common.executeQuery(expireAccessTokenByAccessTokenQuery);
 }
 
 module.exports = {
@@ -133,4 +140,5 @@ module.exports = {
     exprieAccessToken: exprieAccessToken,
     createAccessToken: createAccessToken,
     getUserInfo: checkUserIsExist,
+    expireAccessTokenByAccessToken: expireAccessTokenByAccessToken
 }

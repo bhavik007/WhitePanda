@@ -104,6 +104,14 @@ let userMessage = {
     code: 2018,
     message: 'Otp sent successfully.'
   },
+  ERR_WHILE_SIGN_OUT: {
+    code: 2019,
+    message: 'Error while sign out.'
+  },
+  SIGN_OUT_SUCCESSFUL: {
+    code: 2020,
+    message: 'Sign out successful.'
+  }
 };
 
 module.exports = {

@@ -5,8 +5,11 @@ const session = require('express-session');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-
+const cors = require('cors');
 const app = express();
+
+app.use(cors());
+
 app.use(compression());
 app.use(session({
   secret: 'Th!sI$E9!aYP6Y',
