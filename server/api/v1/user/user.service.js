@@ -221,23 +221,6 @@ async function verifyOTP(countryCode, mobile, OTP) {
     }
 }
 
-let forgotPasswordService = async (request, response) => {
-    debug("user.service -> forgotPasswordService");
-    try {
-        let mobile = request.body.mobile;
-        let countryCode = request.body.country_code !== undefined ? request.body.country_code : "+91";
-        let result = await sendOTP(countryCode, mobile);
-        if (result.status === true) {
-            return common.sendResponse(response, result.data, true);
-        } else {
-            return common.sendResponse(response, result.error, false);
-        }
-    } catch (ex) {
-        debug(ex);
-        return common.sendResponse(response, ex, false);
-    }
-}
-
 async function createAccessToken(request, userId) {
     let token = uuid.v1();
     let deviceId = request.headers["udid"];
@@ -262,28 +245,6 @@ async function createAccessToken(request, userId) {
                 }
             }
         }
-    }
-};
-
-let updatePasswordService = async (request, response) => {
-    debug("user.service -> updatePasswordService");
-    try {
-        let userId = request.session.userInfo.userId;
-        let password = md5(request.body.password);
-        let filedValueUpdate = [{
-            field: 'password',
-            fValue: password
-        }];
-        let result = await userDAL.updateUserByUserId(userId, filedValueUpdate);
-        if (result.status === true) {
-            return common.sendResponse(response, constant.userMessage.MSG_PASSWORD_CHANGES_SUCCESSFULLY, false);
-        } else {
-            return common.sendResponse(response, constant.userMessage.ERR_PASSWORD_CHANGE, false);
-        }
-
-    } catch (ex) {
-        debug(ex);
-        return common.sendResponse(response, constant.userMessage.ERR_PASSWORD_CHANGE, false);
     }
 };
 
@@ -329,8 +290,6 @@ module.exports = {
     signup: signupService,
     verifyOtp: verifyOTPService,
     signin: signinService,
-    forgotPassword: forgotPasswordService,
-    updatePassword: updatePasswordService,
     signinWithOtp: signinWithOtpService,
     signOut: signOutService
 }
